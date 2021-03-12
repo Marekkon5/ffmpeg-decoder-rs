@@ -1,7 +1,7 @@
 use crate::error::Error;
 
-use ffmpeg_sys_next::{
-    self, av_frame_alloc, av_frame_free, av_frame_unref, av_freep, av_get_alt_sample_fmt,
+use ffav::ffi::{
+    av_frame_alloc, av_frame_free, av_frame_unref, av_freep, av_get_alt_sample_fmt,
     av_get_bytes_per_sample, av_get_channel_layout_nb_channels, av_get_sample_fmt_name,
     av_init_packet, av_packet_unref, av_read_frame, av_register_all, av_sample_fmt_is_planar,
     av_samples_alloc, av_samples_get_buffer_size, avcodec_alloc_context3, avcodec_close,
@@ -365,12 +365,12 @@ impl FormatContext {
 }
 
 struct SwrContext {
-    inner: *mut ffmpeg_sys_next::SwrContext,
+    inner: *mut ffav::ffi::SwrContext,
 }
 
 impl SwrContext {
     fn new(codec_ctx: &CodecContext) -> Result<SwrContext, Error> {
-        let swr_ctx: *mut ffmpeg_sys_next::SwrContext = unsafe {
+        let swr_ctx: *mut ffav::ffi::SwrContext = unsafe {
             swr_alloc_set_opts(
                 ptr::null_mut(),
                 codec_ctx.channel_layout() as i64,
