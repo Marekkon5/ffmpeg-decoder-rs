@@ -268,8 +268,9 @@ impl Decoder {
     }
 
     pub(crate) fn _total_duration(&self) -> Option<Duration> {
-        //TODO let duration = self.stream.duration();
-        None
+        let duration = self.stream.duration();
+        Some(Duration::from_millis(duration as u64))
+        // None
     }
 }
 
@@ -460,7 +461,10 @@ impl Stream {
 
     #[allow(dead_code)]
     fn duration(&self) -> i64 {
-        unsafe { self.inner.as_ref().unwrap().duration }
+        unsafe { 
+            let stream = self.inner.as_ref().unwrap();
+            (stream.duration * 1000) / (stream.time_base.num * stream.time_base.den) as i64
+        }
     }
 }
 
